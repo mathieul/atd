@@ -1,0 +1,11 @@
+{
+    "name": "atd",
+    "version": "0.0.1",
+    "description": "Automatic Task Distributor",
+    "engines": {
+        "coffee-script": ">= 1.4.0"
+    },
+    "devDependencies": {
+        "mocha": "0.3.x"
+    }
+}
