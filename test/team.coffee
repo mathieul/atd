@@ -1,5 +1,5 @@
 expect = require('chai').expect
-Team = require('../app/team')
+Team = require('team')
 
 describe "Team", ->
 
