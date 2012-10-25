@@ -7,7 +7,7 @@ describe "Store", ->
   beforeEach ->
     @store = new Store
 
-  it "can add a team", ->
+  it "can add and retrieve a team", ->
     team = new Team(id: '001')
     @store.add(team: team)
     result = @store.get(team: '001')
