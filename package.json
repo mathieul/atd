@@ -3,7 +3,8 @@
     "version": "0.0.1",
     "description": "Automatic Task Distributor",
     "dependencies": {
-        "coffee-script": "1.4.x"
+        "coffee-script": "1.4.x",
+        "underscore": "1.4.x"
     },
     "devDependencies": {
         "mocha": "1.5.x",

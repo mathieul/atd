@@ -5,6 +5,10 @@ describe "Team", ->
 
   describe "a new instance", ->
 
-    it "has a null name by default", ->
-      team = new Team
-      expect(team.name).to.be.a 'null'
+    it "has a name", ->
+      team = new Team(name: "John Zorn")
+      expect(team.get('name')).to.equal "John Zorn"
+
+    it "has an email", ->
+      team = new Team(email: "joe@example.com")
+      expect(team.get('email')).to.equal "joe@example.com"
