@@ -14,6 +14,11 @@ describe "Team", ->
       team = new Team(name: "Sales")
       expect(team.get('name')).to.equal "Sales"
 
+    it "defaults the uid to a randome unique id when not set", ->
+      team = new Team(name: "Blah")
+      expect(team.uid).to.equal team.get('uid')
+      expect(team.uid).to.not.be.an 'undefined'
+
   describe "- relationships", ->
     beforeEach ->
       @team = new Team(uid: "mi6", name: "Secret Intelligence Service")

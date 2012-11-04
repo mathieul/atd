@@ -1,24 +1,20 @@
 _ = require('underscore')
+ModelMixin = require('lib/model-mixin')
 
 class Team
   fields: ['uid', 'name']
 
-  constructor: (attributes = {}) ->
-    @attributes = []
-    @set(attributes)
+  constructor: (args...) ->
+    @_initializeModel(args...)
+    @teammates = {}
 
-  get: (name, value) ->
-    return null unless _.include(@fields, name)
-    @attributes[name] = value if value?
-    @attributes[name]
+  createTeammate: (klass, attributes = null) ->
+    if attributes is null
+      [attributes, klass] = [klass, require('models/teammate')]
+    teammate = new klass(attributes)
+    @teammates[teammate.uid] = teammate
+    teammate
 
-  set: (attributes) ->
-    _(attributes).chain()
-      .pick(@fields...)
-      .each (value, name) =>
-        @uid = value if name is 'uid'
-        @attributes[name] = value
-
-  createTeammate: ->
+_.extend(Team::, ModelMixin)
 
 module.exports = Team
