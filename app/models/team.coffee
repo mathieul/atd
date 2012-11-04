@@ -7,13 +7,19 @@ class Team
   constructor: (args...) ->
     @_initializeModel(args...)
     @teammates = {}
+    @queues = {}
 
-  createTeammate: (klass, attributes = null) ->
-    if attributes is null
-      [attributes, klass] = [klass, require('models/teammate')]
+  createTeammate: (attributes = {}) ->
+    klass = attributes.class ? require('models/teammate')
     teammate = new klass(attributes)
     @teammates[teammate.uid] = teammate
     teammate
+
+  createQueue: (attributes = {}) ->
+    klass = attributes.class ? require('models/queue')
+    queue = new klass(attributes)
+    @queues[queue.uid] = queue
+    queue
 
 _.extend(Team::, ModelMixin)
 

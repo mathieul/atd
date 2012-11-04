@@ -9,7 +9,7 @@ describe "Basic Queueing", ->
     @queue = @team.createQueue(name: "Thank you notes", uid: "e7b")
     @queue.assignTeammate(@mate, level: 1, enabled: true)
 
-  xit "assigns a task to a team mate", ->
+  it "assigns a task to a team mate", ->
     @mate.signIn()
     expect(@mate.status()).to.be "on-break"
     @mate.makeAvailable()

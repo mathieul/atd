@@ -1,6 +1,7 @@
 expect = require('chai').expect
 Team = require('models/team')
 Teammate = require('models/teammate')
+Queue = require('models/queue')
 
 describe "Team", ->
 
@@ -28,3 +29,9 @@ describe "Team", ->
       expect(mate).to.be.an.instanceof(Teammate)
       expect(mate.get('uid')).to.equal "007"
       expect(mate.get('name')).to.equal "James Bond"
+
+    it "creates a new queue with #createQueue", ->
+      queue = @team.createQueue(uid: "b777", name: "Diamonds Are Forever")
+      expect(queue).to.be.an.instanceof(Queue)
+      expect(queue.get('uid')).to.equal "b777"
+      expect(queue.get('name')).to.equal "Diamonds Are Forever"
