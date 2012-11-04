@@ -1,15 +1,15 @@
 expect = require('chai').expect
-Team = require('team')
+Team = require('models/team')
 
 describe "Basic Queueing", ->
 
 	beforeEach ->
-    @team = new Team(name: "Wedding")
+    @team = new Team(name: "Wedding", uid: "ba94")
     @mate = @team.createTeammate(name: "Bride", uid: "a1")
     @queue = @team.createQueue(name: "Thank you notes", uid: "e7b")
     @queue.assignTeammate(@mate, level: 1, enabled: true)
 
-  it "assigns a task to a team mate", ->
+  xit "assigns a task to a team mate", ->
     @mate.signIn()
     expect(@mate.status()).to.be "on-break"
     @mate.makeAvailable()

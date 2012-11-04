@@ -1,6 +1,6 @@
 _ = require('underscore')
 
-class Team
+class Teammate
   fields: ['uid', 'name']
 
   constructor: (attributes = {}) ->
@@ -16,9 +16,7 @@ class Team
     _(attributes).chain()
       .pick(@fields...)
       .each (value, name) =>
-        @uid = value if name is 'uid'
+        @id = value if name is 'id'
         @attributes[name] = value
 
-  createTeammate: ->
-
-module.exports = Team
+module.exports = Teammate
