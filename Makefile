@@ -6,6 +6,6 @@ test:
 	@${MOCHA} ${FLAGS}
 
 watch:
-	@${MOCHA} ${FLAGS} -w
+	@${MOCHA} ${FLAGS} -w -G
 
 .PHONY: test
