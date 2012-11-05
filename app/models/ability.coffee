@@ -1,9 +1,11 @@
 model = require "lib/model"
 
-class Queue
-  fields: ['queueUid', 'teammateUid']
+class Ability
+  fields: ['queueUid', 'teammateUid', 'level', 'enabled']
 
-  constructor: (attributes) ->
+  constructor: (attributes = {}) ->
+    attributes.level ?= "low"
+    attributes.enabled ?= true
     model.setupFields(this, @fields, attributes)
 
-module.exports = Queue
+module.exports = Ability

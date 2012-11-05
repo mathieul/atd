@@ -3,11 +3,11 @@ Team = require('models/team')
 
 describe "Basic Queueing", ->
 
-	beforeEach ->
+  beforeEach ->
     @team = new Team(name: "Wedding", uid: "ba94")
     @mate = @team.createTeammate(name: "Bride", uid: "a1")
     @queue = @team.createQueue(name: "Thank you notes", uid: "e7b")
-    @queue.assignTeammate(@mate, level: 1, enabled: true)
+    @queue.assignTeammate(@mate, level: "high", enabled: true)
 
   it "assigns a task to a team mate", ->
     @mate.signIn()
