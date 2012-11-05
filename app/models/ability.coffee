@@ -1,9 +1,9 @@
 model = require "lib/model"
 
-class Teammate
-  fields: ['uid', 'name']
+class Queue
+  fields: ['queueUid', 'teammateUid']
 
   constructor: (attributes) ->
     model.setupFields(this, @fields, attributes)
 
-module.exports = Teammate
+module.exports = Queue

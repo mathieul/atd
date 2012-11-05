@@ -1,4 +1,3 @@
-_ = require('underscore')
 model = require "lib/model"
 
 class Queue
