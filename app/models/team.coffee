@@ -1,11 +1,11 @@
 _ = require('underscore')
-ModelMixin = require('lib/model-mixin')
+model = require "lib/model"
 
 class Team
   fields: ['uid', 'name']
 
-  constructor: (args...) ->
-    @_initializeModel(args...)
+  constructor: (attributes) ->
+    model.setupFields(this, @fields, attributes)
     @teammates = {}
     @queues = {}
 
@@ -20,7 +20,5 @@ class Team
     queue = new klass(attributes)
     @queues[queue.uid] = queue
     queue
-
-_.extend(Team::, ModelMixin)
 
 module.exports = Team

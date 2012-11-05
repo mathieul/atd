@@ -1,12 +1,10 @@
 _ = require('underscore')
-ModelMixin = require('lib/model-mixin')
+model = require "lib/model"
 
 class Queue
   fields: ['uid', 'name']
 
-  constructor: (args...) ->
-    @_initializeModel(args...)
-
-_.extend(Queue::, ModelMixin)
+  constructor: (attributes) ->
+    model.setupFields(this, @fields, attributes)
 
 module.exports = Queue

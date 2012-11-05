@@ -1,12 +1,10 @@
 _ = require('underscore')
-ModelMixin = require('lib/model-mixin')
+model = require "lib/model"
 
 class Teammate
   fields: ['uid', 'name']
 
-  constructor: (args...) ->
-    @_initializeModel(args...)
-
-_.extend(Teammate::, ModelMixin)
+  constructor: (attributes) ->
+    model.setupFields(this, @fields, attributes)
 
 module.exports = Teammate
