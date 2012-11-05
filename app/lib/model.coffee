@@ -6,6 +6,11 @@ makeGetterSetter = (obj, name) ->
     obj.attributes[name] = value if value?
     obj.attributes[name]
 
+makeMassUpdater = (obj, names) ->
+  obj.set = (attributes = {}) ->
+    for name, value of _.pick(attributes, names)
+      @[name](value)
+
 randomUid = -> crypto.randomBytes(8).toString('hex')
 allIds = {}
 generateUid = ->
@@ -16,6 +21,6 @@ generateUid = ->
 module.exports =
   setupFields: (obj, names, attributes = {}) ->
     makeGetterSetter(obj, name) for name in names
+    makeMassUpdater(obj, names)
     obj.attributes = {uid: generateUid()}
-    for name, value of _.pick(attributes, names)
-      obj[name](value)
+    obj.set(attributes)

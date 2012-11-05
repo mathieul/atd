@@ -1,9 +1,9 @@
 expect = require('chai').expect
 Teammate = require('models/teammate')
 
-describe "Teammate", ->
+describe "Teammate:", ->
 
-  describe "- attributes", ->
+  describe "attributes -", ->
     it "has a uid", ->
       mate = new Teammate(uid: "abc")
       expect(mate.uid()).to.equal "abc"

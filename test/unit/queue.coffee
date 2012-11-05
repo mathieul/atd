@@ -1,9 +1,9 @@
 expect = require('chai').expect
 Queue = require('models/queue')
 
-describe "Queue", ->
+describe "Queue:", ->
 
-  describe "- attributes", ->
+  describe "attributes -", ->
     it "has a uid", ->
       queue = new Queue(uid: "ax87")
       expect(queue.uid()).to.equal "ax87"
