@@ -18,9 +18,12 @@ generateUid = ->
   allIds[uid] = true
   uid
 
+setupFields = (obj, names, attributes = {}) ->
+  makeGetterSetter(obj, name) for name in names
+  makeMassUpdater(obj, names)
+  obj.attributes = {uid: generateUid()}
+  obj.set(attributes)
+
 module.exports =
-  setupFields: (obj, names, attributes = {}) ->
-    makeGetterSetter(obj, name) for name in names
-    makeMassUpdater(obj, names)
-    obj.attributes = {uid: generateUid()}
-    obj.set(attributes)
+  setupFields: setupFields
+  generateUid: generateUid
