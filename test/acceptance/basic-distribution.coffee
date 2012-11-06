@@ -11,48 +11,48 @@ describe "Basic Queueing", ->
 
   it "assigns a task to a team mate", ->
     @mate.signIn()
-    expect(@mate.status()).to.be "on-break"
+    expect(@mate.status()).to.equal "on_break"
     @mate.makeAvailable()
-    expect(@mate.status()).to.be "waiting"
+    expect(@mate.status()).to.equal "waiting"
 
     state = {}
     @queue
-      .on("offer-task",    (t, m) -> state = {status: "offer-task", task: t, teammate: m})
-      .on("assign-task",   (t, m) -> state = {status: "assign-task", task: t, teammate: m})
-      .on("complete-task", (t, m) -> state = {status: "complete-task", task: t, teammate: m})
+      .on("offer_task",    (t, m) -> state = {status: "offer_task", task: t, teammate: m})
+      .on("assign_task",   (t, m) -> state = {status: "assign_task", task: t, teammate: m})
+      .on("complete_task", (t, m) -> state = {status: "complete_task", task: t, teammate: m})
 
     task = new Task(title: "thank Jones family")
-    expect(task.isCompleted()).to.be false
+    expect(task.isCompleted()).to.be.false
 
     @queue.enqueue(task)
     expect(@queue.tasks()).to.equal [task]
     expect(state).to.deep.equal
-      status: "offer-task"
+      status: "offer_task"
       task: task
       teammate: @mate
-    expect(@mate.status()).to.be "task-offered"
+    expect(@mate.status()).to.equal "task_offered"
 
     @mate.accept(task)
     expect(state).to.deep.equal
-      status: "assign-task"
+      status: "assign_task"
       task: task
       teammate: @mate
-    expect(@mate.status()).to.be "busy"
+    expect(@mate.status()).to.equal "busy"
     expect(@mate.currentTasks()).to.equal [task]
 
     @mate.complete(task)
     expect(state).to.deep.equal
-      status: "complete-task"
+      status: "complete_task"
       task: task
       teammate: @mate
-    expect(@mate.status()).to.be "wrapping-up"
+    expect(@mate.status()).to.equal "wrapping_up"
     expect(@mate.currentTasks()).to.equal []
     expect(@queue.tasks()).to.equal []
-    expect(task.isCompleted()).to.be true
+    expect(task.isCompleted()).to.be.true
 
     @mate.startOtherWork()
-    expect(@mate.status()).to.be "other-work"
+    expect(@mate.status()).to.equal "other_work"
     @mate.goOnBreak()
-    expect(@mate.status()).to.be "break"
+    expect(@mate.status()).to.equal "on_break"
     @mate.signOut()
-    expect(@mate.status()).to.be "signed-out"
+    expect(@mate.status()).to.equal "signed_out"
