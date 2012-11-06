@@ -6,9 +6,10 @@ describe "Basic Queueing:", ->
 
   beforeEach ->
     @team = new Team(name: "Wedding", uid: "ba94")
-    @mate = @team.createTeammate(name: "Bride", uid: "a1")
-    @queue = @team.createQueue(name: "Thank you notes", uid: "e7b")
-    @queue.assignTeammate(@mate, level: "high", enabled: true)
+    @distributor = @team.distributor()
+    @mate = @team.teammates().create(name: "Bride", uid: "a1")
+    @queue = @team.queues().create(name: "Thank you notes", uid: "e7b")
+    @queue.abilities.create(teammateUid: @mate.uid(), level: "high", enabled: true)
 
   it "assigns a task to a team mate", ->
     @mate.signIn()
@@ -18,7 +19,7 @@ describe "Basic Queueing:", ->
 
     state = null
     setState = (s, t, q, m) -> state = {status: s, task: t, queue: q, mate: m}
-    @queue
+    @distributor
       .on("offer_task",    (t, q, m) -> setState("offer_task", t, q, m))
       .on("assign_task",   (t, q, m) -> setState("assign_task", t, q, m))
       .on("complete_task", (t, q, m) -> setState("complete_task", t, q, m))

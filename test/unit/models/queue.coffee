@@ -52,10 +52,9 @@ describe "Queue:", ->
         @queue.deassignTeammate(@mate)
         expect(@queue.abilities()).to.deep.equal []
 
-  describe "task distribution -", ->
+  describe "handle queueing -", ->
     beforeEach ->
       @queue = new Queue(uid: "mqrd", name: "Masquerade")
-      @mate = new Teammate(uid: "pl02", name: "Player #2")
       @task = new Task(title: "go north")
 
     it "enqueues a task with #enqueue", ->
@@ -68,4 +67,3 @@ describe "Queue:", ->
         expect(queue).to.equal @queue
         done()
       @queue.enqueue(@task)
-      # @mate.signIn().makeAvailable()
