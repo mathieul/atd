@@ -4,7 +4,8 @@
     "description": "Automatic Task Distributor",
     "dependencies": {
         "coffee-script": "1.4.x",
-        "underscore": "1.4.x"
+        "underscore": "1.4.x",
+        "eventemitter2": "0.4.x"
     },
     "devDependencies": {
         "mocha": "1.5.x",

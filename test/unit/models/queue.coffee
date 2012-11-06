@@ -55,8 +55,17 @@ describe "Queue:", ->
   describe "task distribution -", ->
     beforeEach ->
       @queue = new Queue(uid: "mqrd", name: "Masquerade")
+      @mate = new Teammate(uid: "pl02", name: "Player #2")
       @task = new Task(title: "go north")
 
     it "enqueues a task with #enqueue", ->
       @queue.enqueue(@task)
-      expect(@queue.items()).to.deep.equal [@task]
+      expect(@queue.tasks()).to.deep.equal [@task]
+
+    it "emits an event when a task is queued", (done) ->
+      @queue.on 'task-queued', (task, queue) =>
+        expect(task).to.equal @task
+        expect(queue).to.equal @queue
+        done()
+      @queue.enqueue(@task)
+      # @mate.signIn().makeAvailable()

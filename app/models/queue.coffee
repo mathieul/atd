@@ -1,4 +1,5 @@
 _ = require('underscore')
+EventEmitter2 = require('eventemitter2').EventEmitter2
 model = require "lib/model"
 Ability = require('models/ability')
 
@@ -8,7 +9,8 @@ class Queue
   constructor: (attributes) ->
     model.setupFields(this, @fields, attributes)
     @_abilities = {}
-    @_items = []
+    @_tasks = []
+    @_emitter = new EventEmitter2
 
   abilities: ->
     _.values(@_abilities)
@@ -27,10 +29,13 @@ class Queue
     delete @_abilities[teammate.uid()] if ability?
     ability
 
-  enqueue: (item) ->
-    @_items.push(item)
+  enqueue: (task) ->
+    @_tasks.push(task)
+    @_emitter.emit('task-queued', task, this)
 
-  items: ->
-    @_items.slice(0)
+  tasks: ->
+    @_tasks.slice(0)
+
+  on: (args...) -> @_emitter.on(args...)
 
 module.exports = Queue
