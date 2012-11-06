@@ -8,6 +8,7 @@ class Queue
   constructor: (attributes) ->
     model.setupFields(this, @fields, attributes)
     @_abilities = {}
+    @_items = []
 
   abilities: ->
     _.values(@_abilities)
@@ -25,5 +26,11 @@ class Queue
     ability = @_abilities[teammate.uid()]
     delete @_abilities[teammate.uid()] if ability?
     ability
+
+  enqueue: (item) ->
+    @_items.push(item)
+
+  items: ->
+    @_items.slice(0)
 
 module.exports = Queue

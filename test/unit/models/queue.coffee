@@ -1,6 +1,7 @@
 expect = require('chai').expect
 Queue = require('models/queue')
 Teammate = require('models/teammate')
+Task = require('models/task')
 
 describe "Queue:", ->
 
@@ -13,7 +14,7 @@ describe "Queue:", ->
       queue = new Queue(name: "Time Passes Quickly")
       expect(queue.name()).to.equal "Time Passes Quickly"
 
-  describe "assignments -", ->
+  describe "teammate assignment -", ->
     beforeEach ->
       @queue = new Queue(uid: "mqrd", name: "Masquerade")
       @mate = new Teammate(uid: "pl01", name: "Player #1")
@@ -50,3 +51,12 @@ describe "Queue:", ->
       it "deletes a capability if it exists", ->
         @queue.deassignTeammate(@mate)
         expect(@queue.abilities()).to.deep.equal []
+
+  describe "task distribution -", ->
+    beforeEach ->
+      @queue = new Queue(uid: "mqrd", name: "Masquerade")
+      @task = new Task(title: "go north")
+
+    it "enqueues a task with #enqueue", ->
+      @queue.enqueue(@task)
+      expect(@queue.items()).to.deep.equal [@task]

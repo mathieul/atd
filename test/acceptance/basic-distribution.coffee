@@ -22,7 +22,7 @@ describe "Basic Queueing", ->
       .on("complete_task", (t, m) -> state = {status: "complete_task", task: t, teammate: m})
 
     task = new Task(title: "thank Jones family")
-    expect(task.isCompleted()).to.be.false
+    expect(task.completed()).to.be.false
 
     @queue.enqueue(task)
     expect(@queue.tasks()).to.equal [task]
@@ -48,7 +48,7 @@ describe "Basic Queueing", ->
     expect(@mate.status()).to.equal "wrapping_up"
     expect(@mate.currentTasks()).to.equal []
     expect(@queue.tasks()).to.equal []
-    expect(task.isCompleted()).to.be.true
+    expect(task.completed()).to.be.true
 
     @mate.startOtherWork()
     expect(@mate.status()).to.equal "other_work"
