@@ -19,6 +19,7 @@ generateUid = ->
   uid
 
 setupFields = (obj, names, attributes = {}) ->
+  names = names.concat('uid')
   makeGetterSetter(obj, name) for name in names
   makeMassUpdater(obj, names)
   obj.attributes = {uid: generateUid()}

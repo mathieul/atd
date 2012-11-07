@@ -1,25 +1,18 @@
-model = require "lib/model"
+model = require('lib/model')
+Collection = require('lib/collection')
 Teammate = require('models/teammate')
 Queue = require('models/queue')
 
 class Team
-  fields: ['uid', 'name']
+  fields: ['name']
 
   constructor: (attributes) ->
     model.setupFields(this, @fields, attributes)
-    @teammates = {}
-    @queues = {}
 
-  createTeammate: (attributes = {}) ->
-    klass = attributes.class ? Teammate
-    teammate = new klass(attributes)
-    @teammates[teammate.uid] = teammate
-    teammate
+  teammates: ->
+    @_teammates ||= new Collection(Teammate)
 
-  createQueue: (attributes = {}) ->
-    klass = attributes.class ? Queue
-    queue = new klass(attributes)
-    @queues[queue.uid] = queue
-    queue
+  queues: ->
+    @_queues ||= new Collection(Queue)
 
 module.exports = Team

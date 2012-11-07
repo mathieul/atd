@@ -6,10 +6,6 @@ Task = require('models/task')
 describe "Queue:", ->
 
   describe "attributes -", ->
-    it "has a uid", ->
-      queue = new Queue(uid: "ax87")
-      expect(queue.uid()).to.equal "ax87"
-
     it "has a name", ->
       queue = new Queue(name: "Time Passes Quickly")
       expect(queue.name()).to.equal "Time Passes Quickly"
@@ -50,7 +46,7 @@ describe "Queue:", ->
 
       it "deletes a capability if it exists", ->
         @queue.deassignTeammate(@mate)
-        expect(@queue.abilities()).to.deep.equal []
+        expect(@queue.abilities().length).to.equal 0
 
   describe "handle queueing -", ->
     beforeEach ->

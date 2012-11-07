@@ -1,32 +1,30 @@
 _ = require('underscore')
 EventEmitter2 = require('eventemitter2').EventEmitter2
 model = require "lib/model"
+Collection = require('lib/collection')
 Ability = require('models/ability')
 
 class Queue
-  fields: ['uid', 'name']
+  fields: ['name']
 
   constructor: (attributes) ->
     model.setupFields(this, @fields, attributes)
-    @_abilities = {}
     @_tasks = []
     @_emitter = new EventEmitter2
 
   abilities: ->
-    _.values(@_abilities)
+    @_abilities ||= new Collection(Ability)
 
   assignTeammate: (teammate, options = {}) ->
-    if (ability = @_abilities[teammate.uid()])
-      return ability
-    klass = options.class ? Ability
+    return ability if ability = @_pickForTeammate(teammate)
     attributes = _.extend {}, options,
       queueUid:    @uid()
       teammateUid: teammate.uid()
-    @_abilities[teammate.uid()] = new klass(attributes)
+    @abilities().create(attributes)
 
   deassignTeammate: (teammate) ->
-    ability = @_abilities[teammate.uid()]
-    delete @_abilities[teammate.uid()] if ability?
+    ability = @_pickForTeammate(teammate)
+    @abilities().remove(ability) if ability?
     ability
 
   enqueue: (task) ->
@@ -36,6 +34,13 @@ class Queue
   tasks: ->
     @_tasks.slice(0)
 
-  on: (args...) -> @_emitter.on(args...)
+  on: (args...) ->
+    @_emitter.on(args...)
+
+  _pickForTeammate: (teammate) ->
+    found = @abilities().pick
+      teammateUid: teammate.uid()
+      queueUid: @uid()
+    found[0]
 
 module.exports = Queue

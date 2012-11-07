@@ -2,7 +2,7 @@ model = require 'lib/model'
 StateMachine = require 'models/teammate/state-machine'
 
 class Teammate
-  fields: ['uid', 'name']
+  fields: ['name']
 
   constructor: (attributes) ->
     model.setupFields(this, @fields, attributes)

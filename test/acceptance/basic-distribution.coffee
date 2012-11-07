@@ -6,10 +6,10 @@ describe "Basic Queueing:", ->
 
   beforeEach ->
     @team = new Team(name: "Wedding", uid: "ba94")
-    @distributor = @team.distributor()
     @mate = @team.teammates().create(name: "Bride", uid: "a1")
     @queue = @team.queues().create(name: "Thank you notes", uid: "e7b")
-    @queue.abilities.create(teammateUid: @mate.uid(), level: "high", enabled: true)
+    @queue.assignTeammate(@mate, level: "high", enabled: true)
+    @distributor = @team.distributor()
 
   it "assigns a task to a team mate", ->
     @mate.signIn()

@@ -3,7 +3,7 @@ model = require('lib/model')
 
 class TestModel
   constructor: (attributes) ->
-    model.setupFields(this, ['uid', 'name'], attributes)
+    model.setupFields(this, ['name'], attributes)
 
 describe "Model:", ->
   describe "#setupFields -", ->

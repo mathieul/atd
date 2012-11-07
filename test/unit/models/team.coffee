@@ -6,12 +6,6 @@ Queue = require('models/queue')
 describe "Team:", ->
 
   describe "attributes -", ->
-    it "has a uid", ->
-      team = new Team(uid: "abc")
-      expect(team.uid()).to.equal "abc"
-      team.uid("ae34")
-      expect(team.uid()).to.equal "ae34"
-
     it "has a name", ->
       team = new Team(name: "Sales")
       expect(team.name()).to.equal "Sales"
@@ -22,18 +16,16 @@ describe "Team:", ->
       team = new Team(name: "Blah")
       expect(team.uid()).to.not.be.an 'undefined'
 
-  describe "relationships -", ->
+  describe "collections -", ->
     beforeEach ->
       @team = new Team(uid: "mi6", name: "Secret Intelligence Service")
 
-    it "creates a new team mate with #createTeammate", ->
-      mate = @team.createTeammate(uid: "007", name: "James Bond")
+    it "has a collection of teammates", ->
+      mate = @team.teammates().create(uid: "007", name: "James Bond")
       expect(mate).to.be.an.instanceof(Teammate)
-      expect(mate.uid()).to.equal "007"
-      expect(mate.name()).to.equal "James Bond"
+      expect(@team.teammates().get("007")).to.deep.equal mate
 
-    it "creates a new queue with #createQueue", ->
-      queue = @team.createQueue(uid: "b777", name: "Diamonds Are Forever")
+    it "has a collection of queues", ->
+      queue = @team.queues().create(uid: "b777", name: "Diamonds Are Forever")
       expect(queue).to.be.an.instanceof(Queue)
-      expect(queue.uid()).to.equal "b777"
-      expect(queue.name()).to.equal "Diamonds Are Forever"
+      expect(@team.queues().get("b777")).to.deep.equal queue
