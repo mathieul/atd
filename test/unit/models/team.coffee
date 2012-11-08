@@ -1,10 +1,7 @@
 expect = require('chai').expect
 Team = require('models/team')
-Teammate = require('models/teammate')
-Queue = require('models/queue')
 
 describe "Team:", ->
-
   describe "attributes -", ->
     it "has a name", ->
       team = new Team(name: "Sales")

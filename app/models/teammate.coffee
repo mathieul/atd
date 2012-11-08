@@ -1,5 +1,5 @@
-model = require 'lib/model'
-StateMachine = require 'lib/state-machine'
+model = require('lib/model')
+StateMachine = require('lib/state-machine')
 
 class Teammate
   fields: ['name']

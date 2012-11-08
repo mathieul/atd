@@ -1,6 +1,6 @@
 _ = require('underscore')
 EventEmitter2 = require('eventemitter2').EventEmitter2
-model = require "lib/model"
+model = require('lib/model')
 Collection = require('lib/collection')
 Ability = require('models/ability')
 

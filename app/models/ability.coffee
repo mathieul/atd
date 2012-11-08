@@ -1,4 +1,4 @@
-model = require "lib/model"
+model = require('lib/model')
 
 class Ability
   fields: ['queueUid', 'teammateUid', 'level', 'enabled']
