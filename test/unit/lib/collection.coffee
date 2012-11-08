@@ -1,10 +1,14 @@
 expect = require('chai').expect
+EventEmitter2 = require('eventemitter2').EventEmitter2
 Collection = require('lib/collection')
 model = require('lib/model')
 
 class TestModel
   constructor: (attributes) ->
     model.setupFields(this, ['uid', 'name'], attributes)
+    @emitter = new EventEmitter2
+
+  on: (args...) -> @emitter.on(args...)
 
 describe "Collection:", ->
   beforeEach ->
@@ -41,3 +45,13 @@ describe "Collection:", ->
     bashung = @collection.create(uid: "001", name: "Bashung")
     found = @collection.pick(name: "Bashung")
     expect(found).to.deep.equal [bashung]
+
+  it "can listen to events on the instances with #on", (done) ->
+    collection = new Collection(TestModel, events: ['new-album'])
+    gainsbourg = collection.create(name: "Gainsbourg")
+    collection.on "new-album", (artist, album) ->
+      expect(artist).to.deep.equal(gainsbourg)
+      expect(album).to.equal "Aux Armes Etc..."
+      done()
+    gainsbourg.emitter.emit('discarded')
+    gainsbourg.emitter.emit('new-album', gainsbourg, "Aux Armes Etc...")

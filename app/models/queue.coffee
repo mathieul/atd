@@ -38,6 +38,9 @@ class Queue
   on: (args...) ->
     @_emitter.on(args...)
 
+  removeAllListeners: (args...) ->
+    @_emitter.removeAllListeners(args...)
+
   _findForTeammate: (teammate) ->
     found = @abilities().pick
       teammateUid: teammate.uid()

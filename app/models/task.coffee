@@ -15,6 +15,9 @@ class Task
 
   status: -> @_sm.state()
 
+  removeAllListeners: (args...) ->
+    @_emitter.removeAllListeners(args...)
+
   on: (args...) ->
     @_emitter.on(args...)
 

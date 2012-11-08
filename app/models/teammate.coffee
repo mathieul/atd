@@ -17,6 +17,9 @@ class Teammate
   on: (args...) ->
     @_emitter.on(args...)
 
+  removeAllListeners: (args...) ->
+    @_emitter.removeAllListeners(args...)
+
   signIn:        -> @_sm.trigger('sign_in')
   makeAvailable: -> @_sm.trigger('make_available')
 

@@ -31,3 +31,6 @@ describe "Team:", ->
       task = @team.tasks().create(uid: "tid01", name: "Buy milk")
       expect(task).to.be.an.instanceof require('models/task')
       expect(@team.tasks("tid01")).to.deep.equal task
+
+    it "has a distributor", ->
+      expect(@team.distributor()).to.be.an.instanceof require('distributor')
