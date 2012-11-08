@@ -3,7 +3,7 @@ FLAGS=--compilers coffee:coffee-script --recursive --timeout 1s
 export NODE_PATH := ${PWD}/app:${NODE_PATH}
 
 test:
-	@${MOCHA} ${FLAGS}
+	@${MOCHA} ${FLAGS} --reporter spec
 
 watch:
 	@${MOCHA} ${FLAGS} -w -G
