@@ -23,5 +23,6 @@ describe "Teammate:", ->
       @mate.makeAvailable()
       expect(@mate.status()).to.equal 'signed_out'
 
-      @mate.signIn().makeAvailable()
+      @mate.signIn()
+      @mate.makeAvailable()
       expect(@mate.status()).to.equal 'waiting'
