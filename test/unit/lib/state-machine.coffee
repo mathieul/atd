@@ -38,7 +38,7 @@ describe "StateMachine:", ->
   it "starts with the initial state", ->
     expect(@machine.state()).to.equal 'created'
 
-  describe "#trigger: ", ->
+  describe "#trigger -", ->
     it "transitions to a new state when current state matches", ->
       expect(@machine.state()).to.equal 'created'
       expect(@machine.trigger("queue")).to.be.true
@@ -53,3 +53,13 @@ describe "StateMachine:", ->
     it "doesn't change state when transitioning from the wrong state", ->
       expect(@machine.trigger("assign")).to.be.false
       expect(@machine.state()).to.equal 'created'
+
+  describe "hooks -", ->
+    it "can specify a hook to run after the state changes", (done) ->
+      machine = new StateMachine config,
+        changed: (newState, previousState, message) ->
+          expect(newState).to.equal 'queued'
+          expect(previousState).to.equal 'created'
+          expect(message).to.equal 'queue'
+          done()
+      machine.trigger('queue')

@@ -1,7 +1,7 @@
 _ = require('underscore')
 
 class StateMachine
-  constructor: (config) ->
+  constructor: (config, @_hooks = {}) ->
     @_current = config.initial
     @_states = _.uniq(config.states.concat(config.initial))
     @_transition = @_loadTransitions(config.transitions)
@@ -9,7 +9,8 @@ class StateMachine
   trigger: (message) ->
     destination = @_transition[message]?[@_current]
     if destination?
-      @_current = destination
+      [previous, @_current] = [@_current, destination]
+      @_hooks.changed?(@_current, previous, message)
       true
     else
       false
