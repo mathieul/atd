@@ -44,3 +44,11 @@ describe "Task:", ->
       @task.queue(); @task.offer()
       @task.cancel()
       expect(@task.status()).to.equal 'cancelled'
+
+    it "triggers an event when changing status", (done) ->
+      @task.on "status-changed", (task, status, previous) =>
+        expect(task).to.deep.equal @task
+        expect(status).to.equal 'queued'
+        expect(previous).to.equal 'created'
+        done()
+      @task.queue()

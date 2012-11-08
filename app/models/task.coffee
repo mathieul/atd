@@ -1,3 +1,4 @@
+EventEmitter2 = require('eventemitter2').EventEmitter2
 model = require('lib/model')
 StateMachine = require('lib/state-machine')
 
@@ -7,9 +8,15 @@ class Task
   constructor: (attributes = {}) ->
     attributes.completed ?= false
     model.setupFields(this, @fields, attributes)
-    @_sm = new StateMachine(stateMachineConfig)
+    @_emitter = new EventEmitter2
+    @_sm = new StateMachine stateMachineConfig,
+      changed: (newState, previousState, message) =>
+        @_emitter.emit('status-changed', this, newState, previousState)
 
   status: -> @_sm.state()
+
+  on: (args...) ->
+    @_emitter.on(args...)
 
 for message in ['queue', 'offer', 'assign', 'complete', 'cancel']
   Task::[message] = do (message) -> (-> @_sm.trigger message)

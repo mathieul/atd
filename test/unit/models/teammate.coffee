@@ -26,3 +26,11 @@ describe "Teammate:", ->
       @mate.signIn()
       @mate.makeAvailable()
       expect(@mate.status()).to.equal 'waiting'
+
+    it "triggers an event when changing status", (done) ->
+      @mate.on "status-changed", (teammate, status, previous) =>
+        expect(teammate).to.deep.equal @mate
+        expect(status).to.equal 'on_break'
+        expect(previous).to.equal 'signed_out'
+        done()
+      @mate.signIn()
