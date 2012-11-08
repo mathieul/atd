@@ -10,20 +10,21 @@ class Queue
   constructor: (attributes) ->
     model.setupFields(this, @fields, attributes)
     @_tasks = []
+    @_abilities = new Collection(Ability)
     @_emitter = new EventEmitter2
 
-  abilities: ->
-    @_abilities ||= new Collection(Ability)
+  abilities: (uid) ->
+    if uid? then @_abilities.get(uid) else @_abilities
 
   assignTeammate: (teammate, options = {}) ->
-    return ability if ability = @_pickForTeammate(teammate)
+    return ability if ability = @_findForTeammate(teammate)
     attributes = _.extend {}, options,
       queueUid:    @uid()
       teammateUid: teammate.uid()
     @abilities().create(attributes)
 
   deassignTeammate: (teammate) ->
-    ability = @_pickForTeammate(teammate)
+    ability = @_findForTeammate(teammate)
     @abilities().remove(ability) if ability?
     ability
 
@@ -37,7 +38,7 @@ class Queue
   on: (args...) ->
     @_emitter.on(args...)
 
-  _pickForTeammate: (teammate) ->
+  _findForTeammate: (teammate) ->
     found = @abilities().pick
       teammateUid: teammate.uid()
       queueUid: @uid()

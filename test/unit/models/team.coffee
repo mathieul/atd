@@ -19,10 +19,15 @@ describe "Team:", ->
 
     it "has a collection of teammates", ->
       mate = @team.teammates().create(uid: "007", name: "James Bond")
-      expect(mate).to.be.an.instanceof(Teammate)
-      expect(@team.teammates().get("007")).to.deep.equal mate
+      expect(mate).to.be.an.instanceof require('models/teammate')
+      expect(@team.teammates("007")).to.deep.equal mate
 
     it "has a collection of queues", ->
       queue = @team.queues().create(uid: "b777", name: "Diamonds Are Forever")
-      expect(queue).to.be.an.instanceof(Queue)
-      expect(@team.queues().get("b777")).to.deep.equal queue
+      expect(queue).to.be.an.instanceof require('models/queue')
+      expect(@team.queues("b777")).to.deep.equal queue
+
+    it "has a collection of tasks", ->
+      task = @team.tasks().create(uid: "tid01", name: "Buy milk")
+      expect(task).to.be.an.instanceof require('models/task')
+      expect(@team.tasks("tid01")).to.deep.equal task
