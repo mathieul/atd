@@ -7,6 +7,8 @@ class Collection
     @models = {}
     @length = 0
     @_events = options.events || []
+    if options.owner?
+      [@ownerAttribute, @owner] = [name, owner] for name, owner of options.owner
     @_callbacks = {}
 
   create: (attributes) ->
@@ -22,6 +24,7 @@ class Collection
       model.on event, (args...) =>
         @_broadcastEvent(event, args)
     @_updateLength()
+    model[@ownerAttribute] = @owner if @owner?
     model
 
   remove: (uid) ->
@@ -38,14 +41,14 @@ class Collection
       values[name] = model[name]?() for name, expected of filters
       _.isEqual(filters, values)
 
-  on: (event, callback) ->
+  on: (event, callback, context = null) ->
     list = @_callbacks[event] ||= []
-    list.push(callback)
+    list.push([callback, context])
 
   _updateLength: ->
     @length = _.size(@models)
 
   _broadcastEvent: (event, args) ->
-    for callback in (@_callbacks[event] || [])
-      callback(args...)
+    for [callback, context] in (@_callbacks[event] || [])
+      callback.apply(context, args)
 module.exports = Collection

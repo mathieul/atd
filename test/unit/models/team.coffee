@@ -27,6 +27,12 @@ describe "Team:", ->
       expect(queue).to.be.an.instanceof require('models/queue')
       expect(@team.queues("b777")).to.deep.equal queue
 
+    it "has a collection of abilities", ->
+      ability = @team.abilities().create(uid: "a1", queueId: "b777", teammateId: "007")
+      expect(ability).to.be.an.instanceof require('models/ability')
+      expect(@team.abilities("a1")).to.deep.equal ability
+      expect(@team.abilities(queueId: "b777", teammateId: "007")).to.deep.equal.ability
+
     it "has a collection of tasks", ->
       task = @team.tasks().create(uid: "tid01", name: "Buy milk")
       expect(task).to.be.an.instanceof require('models/task')

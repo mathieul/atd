@@ -34,3 +34,7 @@ describe "Teammate:", ->
         expect(previous).to.equal 'signed_out'
         done()
       @mate.signIn()
+
+  describe "relationships -", ->
+    xit "can be abilited to handle tasks from queues", ->
+

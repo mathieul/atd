@@ -19,12 +19,12 @@ describe "Distributor:", ->
   beforeEach ->
     @queues = new Collection(Queue)
     @support = @queues.create(name: "Support")
-    @teammates = new Collection(Teammate)
+    @teammates = new Collection(Teammate, events: ['status-changed'])
     @joe = @teammates.create(uid: "001", name: "Joe")
     @support.assignTeammate(@joe)
 
   describe "queues are empty, no agent are available -", (done) ->
-    it "it offers a queued task to an agent waiting'", ->
+    it "it offers a queued task to an agent who becomes available'", ->
       distributor = new Distributor(@queues, @teammates)
       task = new Task(title: "my printer is not working")
       @support.enqueue(task)
