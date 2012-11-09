@@ -1,14 +1,14 @@
 expect = require('chai').expect
-sinon = require('sinon')
-EventEmitter2 = require('eventemitter2').EventEmitter2
+# sinon = require('sinon')
+# EventEmitter2 = require('eventemitter2').EventEmitter2
 Distributor = require('distributor')
-# Collection = require('lib/collection')
-# Queue = require('models/queue')
-# Teammate = require('models/teammate')
-# Task = require('models/task')
+Collection = require('lib/collection')
+Queue = require('models/queue')
+Teammate = require('models/teammate')
+Task = require('models/task')
 
-class CollectionMock extends EventEmitter2
-  constructor: (@name) ->
+# class CollectionMock extends EventEmitter2
+#   constructor: (@name) ->
 
 # it "listens to queue events (task-queued, task-dequeued to cancel)"
 # it "listens to agent events (agent-available, agent-not-available to cancel)"
@@ -17,13 +17,19 @@ class CollectionMock extends EventEmitter2
 
 describe "Distributor:", ->
   beforeEach ->
-    @queues = new CollectionMock("Queues")
-    @teammates = new CollectionMock("Teammates")
+    @queues = new Collection(Queue)
+    @support = @queues.create(name: "Support")
+    @teammates = new Collection(Teammate)
+    @joe = @teammates.create(uid: "001", name: "Joe")
+    @support.assignTeammate(@joe)
 
   describe "queues are empty, no agent are available -", (done) ->
-    it "it looks for a teammate when a queue emits 'next-task-waiting'", ->
+    it "it offers a queued task to an agent waiting'", ->
       distributor = new Distributor(@queues, @teammates)
-      queue = {name: 'queue'}
-      task = {name: 'task'}
-      sinon.mock(@teammates).expects('on')
-      @queues.emit('next-task-waiting', queue, task)
+      task = new Task(title: "my printer is not working")
+      @support.enqueue(task)
+      @joe.signIn()
+
+      @joe.makeAvailable()
+      expect(task.status()).to.equal 'offered'
+      expect(@joe.status()).to.equal 'task_offered'
