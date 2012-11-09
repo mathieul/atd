@@ -11,7 +11,7 @@ describe "Basic Queueing:", ->
     @queue.assignTeammate(@mate, level: "high", enabled: true)
     @distributor = @team.distributor()
 
-  it "assigns a task to a team mate", ->
+  xit "assigns a task to a team mate", ->
     @mate.signIn()
     expect(@mate.status()).to.equal "on_break"
     @mate.makeAvailable()
