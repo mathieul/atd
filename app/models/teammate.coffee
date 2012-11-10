@@ -39,8 +39,13 @@ class Teammate
 
   acceptTaskOffered: -> @_sm.trigger('accept_task')
 
-  finishTask: ->
-    @_sm.trigger('finish_task')
+  finishTask: -> @_sm.trigger('finish_task')
+
+  startOtherWork: -> @_sm.trigger('start_other_work')
+
+  goOnBreak: -> @_sm.trigger('go_on_break')
+
+  signOut: -> @_sm.trigger('sign_out')
 
 stateMachineConfig =
   initial: 'signed_out'
@@ -69,5 +74,14 @@ stateMachineConfig =
     finish_task:
       from: 'busy'
       to: 'wrapping_up'
+    start_other_work:
+      from: ['on_break', 'wrapping_up', 'waiting']
+      to: 'other_work'
+    go_on_break:
+      from: ['wrapping_up', 'other_work', 'waiting']
+      to: 'on_break'
+    sign_out:
+      from: ['on_break', 'wrapping_up', 'other_work', 'waiting']
+      to: 'signed_out'
 
 module.exports = Teammate

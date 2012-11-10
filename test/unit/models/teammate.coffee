@@ -46,6 +46,8 @@ describe "Teammate:", ->
       @mate = new Teammate(name: "Greg Cohen")
       @mate.parent = @team
       @task = new Task(name: "Buy eggs")
+      @task.queue()
+      @mate.signIn()
 
     it "can be assigned to queues through abilities", ->
       expect(@mate.queues().length).to.equal 0
@@ -55,29 +57,41 @@ describe "Teammate:", ->
       expect(@mate.queues()).to.deep.equal [q1]
 
     it "can be offered a task with #offerTask", ->
-      @task.queue()
       @mate.offerTask(@task)
-      expect(@mate.status()).to.equal "signed_out"
+      expect(@mate.status()).to.equal "on_break"
 
-      @mate.signIn()
       @mate.makeAvailable()
       @mate.offerTask(@task)
       expect(@mate.status()).to.equal "task_offered"
       expect(@mate.currentTask()).to.deep.equal @task
 
     it "can accept a task with #acceptTaskOffered", ->
-      @task.queue()
-      @mate.signIn()
       @mate.makeAvailable()
       @mate.offerTask(@task)
       @mate.acceptTaskOffered()
       expect(@mate.status()).to.equal "busy"
 
     it "can finish the task currently assigned", ->
-      @task.queue()
-      @mate.signIn()
       @mate.makeAvailable()
       @mate.offerTask(@task)
       @mate.acceptTaskOffered()
       @mate.finishTask()
       expect(@mate.status()).to.equal "wrapping_up"
+
+    it "can start some other work", ->
+      @mate.makeAvailable()
+      @mate.offerTask(@task)
+      @mate.acceptTaskOffered()
+      @mate.finishTask()
+      @mate.startOtherWork()
+      expect(@mate.status()).to.equal "other_work"
+
+    it "can go on a break", ->
+      @mate.makeAvailable()
+      @mate.goOnBreak()
+      expect(@mate.status()).to.equal "on_break"
+
+    it "can sign out", ->
+      @mate.goOnBreak()
+      @mate.signOut()
+      expect(@mate.status()).to.equal "signed_out"
