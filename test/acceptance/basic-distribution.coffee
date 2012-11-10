@@ -54,10 +54,10 @@ describe "Basic Queueing:", ->
         expect(state.queue).to.deep.equal @queue
         expect(state.teammate).to.deep.equal @mate
 
-        @mate.finish(task)
+        @mate.finishTask(task)
         setTimeout =>
           expect(@mate.status()).to.equal "wrapping_up"
-          expect(@mate.currentTask()).to.deep.equal []
+          expect(@mate.currentTask()).to.be.null
           expect(task.status()).to.equal "completed"
           expect(@queue.tasks()).to.deep.equal []
 

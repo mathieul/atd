@@ -3,10 +3,9 @@ model = require('lib/model')
 StateMachine = require('lib/state-machine')
 
 class Task
-  fields: ['uid', 'title', 'completed']
+  fields: ['title']
 
   constructor: (attributes = {}) ->
-    attributes.completed ?= false
     model.setupFields(this, @fields, attributes)
     @_currentQueue = null
     @_emitter = new EventEmitter2

@@ -32,6 +32,10 @@ class Queue
     @_tasks.push(task)
     @_emitter.emit('task-queued', task, this)
 
+  dequeue: (taskToRemove) ->
+    @_tasks = _.reject @_tasks, (task) -> task.uid() is taskToRemove.uid()
+    @_emitter.emit('task-dequeued', taskToRemove, this)
+
   tasks: ->
     @_tasks
 

@@ -45,6 +45,7 @@ describe "Teammate:", ->
       @team = new Team(name: "Masada")
       @mate = new Teammate(name: "Greg Cohen")
       @mate.parent = @team
+      @task = new Task(name: "Buy eggs")
 
     it "can be assigned to queues through abilities", ->
       expect(@mate.queues().length).to.equal 0
@@ -54,19 +55,29 @@ describe "Teammate:", ->
       expect(@mate.queues()).to.deep.equal [q1]
 
     it "can be offered a task with #offerTask", ->
-      task = new Task(name: "Buy eggs")
-      task.queue()
-      expect(@mate.offerTask(task)).to.be.false
+      @task.queue()
+      @mate.offerTask(@task)
+      expect(@mate.status()).to.equal "signed_out"
+
       @mate.signIn()
       @mate.makeAvailable()
-      expect(@mate.offerTask(task)).to.be.true
+      @mate.offerTask(@task)
       expect(@mate.status()).to.equal "task_offered"
+      expect(@mate.currentTask()).to.deep.equal @task
 
     it "can accept a task with #acceptTaskOffered", ->
-      task = new Task(name: "Buy eggs")
-      task.queue()
+      @task.queue()
       @mate.signIn()
       @mate.makeAvailable()
-      @mate.offerTask(task)
+      @mate.offerTask(@task)
       @mate.acceptTaskOffered()
       expect(@mate.status()).to.equal "busy"
+
+    it "can finish the task currently assigned", ->
+      @task.queue()
+      @mate.signIn()
+      @mate.makeAvailable()
+      @mate.offerTask(@task)
+      @mate.acceptTaskOffered()
+      @mate.finishTask()
+      expect(@mate.status()).to.equal "wrapping_up"

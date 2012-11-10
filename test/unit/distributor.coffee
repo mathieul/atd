@@ -44,10 +44,40 @@ describe "Distributor:", ->
         done()
       @joe.makeAvailable()
 
-    it "update the task when the agent accepts it", (done) ->
+    it "updates the task when the agent accepts it", (done) ->
       @joe.makeAvailable()
       @joe.acceptTaskOffered()
       setTimeout =>
         expect(@task.status()).to.equal 'assigned'
         done()
       , 100
+
+    it "emits a 'assign_task' event", (done) ->
+      @joe.makeAvailable()
+      @distributor.on 'assign_task', (task, queue, teammate) =>
+        expect(task).to.deep.equal @task
+        expect(queue).to.deep.equal @support
+        expect(teammate).to.deep.equal @joe
+        done()
+      @joe.acceptTaskOffered()
+
+    it "updates the task and queue when the agent finishes it", (done) ->
+      @joe.makeAvailable()
+      @joe.acceptTaskOffered()
+      @joe.finishTask()
+      setTimeout =>
+        expect(@task.status()).to.equal 'completed'
+        expect(@task.currentQueue()).to.be.null
+        expect(@queue.tasks()).to.deep.equal []
+        done()
+      , 100
+
+    it "emits a 'complete_task' event", (done) ->
+      @joe.makeAvailable()
+      @joe.acceptTaskOffered()
+      @distributor.on 'complete_task', (task, queue, teammate) =>
+        expect(task).to.deep.equal @task
+        expect(queue).to.deep.equal @support
+        expect(teammate).to.deep.equal @joe
+        done()
+      @joe.finishTask()

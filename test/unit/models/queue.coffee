@@ -82,3 +82,9 @@ describe "Queue:", ->
       expect(@queue.nextTask()).to.deep.equal one
       @queue.enqueue(two = new Task(name: 'two'))
       expect(@queue.nextTask()).to.deep.equal one
+
+    it "removes the task with #dequeue", ->
+      @queue.enqueue(@task)
+      @queue.dequeue(@task)
+      expect(@queue.tasks()).to.deep.equal []
+

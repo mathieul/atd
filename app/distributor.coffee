@@ -7,6 +7,7 @@ class Distributor
     @teammates.on 'status-changed', (teammate, status) =>
       @offerTask(teammate) if status is 'waiting'
       @assignTask(teammate) if status is 'busy'
+      @completeTask(teammate) if status is 'wrapping_up'
 
   offerTask: (teammate) ->
     {queue, task} = taskMatcher.findTaskFor(teammate)
@@ -18,6 +19,16 @@ class Distributor
     task = teammate.currentTask()
     task.assign()
     @_emitter.emit('assign_task', task, task.currentQueue(), teammate)
+
+  completeTask: (teammate) ->
+    task = teammate.currentTask()
+    task.complete()
+    queue = task.currentQueue()
+    queue.dequeue(task)
+    # TODO: stop using private API when extracting action
+    teammate._currentTask = null
+    task._currentQueue = null
+    @_emitter.emit('complete_task', task, queue, teammate)
 
   on: (args...) ->
     @_emitter.on(args...)

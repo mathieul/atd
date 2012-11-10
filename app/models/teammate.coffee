@@ -35,13 +35,12 @@ class Teammate
 
   offerTask: (task) ->
     @_sm.trigger('offer_task')
-    if @status() is 'task_offered'# and task.offer() and task.status() is 'offered'
-      @_currentTask = task
-      true
-    else
-      false
+    @_currentTask = task if @status() is 'task_offered'
 
   acceptTaskOffered: -> @_sm.trigger('accept_task')
+
+  finishTask: ->
+    @_sm.trigger('finish_task')
 
 stateMachineConfig =
   initial: 'signed_out'
@@ -67,5 +66,8 @@ stateMachineConfig =
     accept_task:
       from: 'task_offered'
       to: 'busy'
+    finish_task:
+      from: 'busy'
+      to: 'wrapping_up'
 
 module.exports = Teammate
