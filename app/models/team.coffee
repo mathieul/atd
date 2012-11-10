@@ -40,7 +40,7 @@ class Team
     if uid? then @_tasks.get(uid) else @_tasks
 
   distributor: ->
-    @_distributor ?= new Distributor(@teammates(), @queues())
+    @_distributor ?= new Distributor(@queues(), @teammates())
     @_distributor
 
 module.exports = Team

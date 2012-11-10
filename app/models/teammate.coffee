@@ -32,11 +32,13 @@ class Teammate
 
   offerTask: (task) ->
     @_sm.trigger('offer_task')
-    if @status() is 'task_offered' and task.offer() and task.status() is 'offered'
+    if @status() is 'task_offered'# and task.offer() and task.status() is 'offered'
       @_currentTask = task
       true
     else
       false
+
+  currentTask: -> @_currentTask
 
 stateMachineConfig =
   initial: 'signed_out'

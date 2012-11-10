@@ -9,7 +9,8 @@ class Distributor
 
   teammateIsAvailable: (teammate) ->
     {queue, task} = taskMatcher.findTaskFor(teammate)
-    if task? and teammate.offerTask(task)
+    if task?
+      teammate.offerTask(task) and task.offer()
       @_emitter.emit('offer_task', task, queue, teammate)
 
   on: (args...) ->
