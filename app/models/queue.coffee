@@ -2,7 +2,6 @@ _ = require('underscore')
 EventEmitter2 = require('eventemitter2').EventEmitter2
 model = require('lib/model')
 Collection = require('lib/collection')
-Ability = require('models/ability')
 
 class Queue
   fields: ['name']
@@ -10,11 +9,10 @@ class Queue
   constructor: (attributes) ->
     model.setupFields(this, @fields, attributes)
     @_tasks = []
-    @_abilities = new Collection(Ability)
     @_emitter = new EventEmitter2
 
-  abilities: (uid) ->
-    if uid? then @_abilities.get(uid) else @_abilities
+  abilities: ->
+    @parent?.abilities()
 
   assignTeammate: (teammate, options = {}) ->
     return ability if ability = @_findForTeammate(teammate)
@@ -29,11 +27,16 @@ class Queue
     ability
 
   enqueue: (task) ->
+    task.queue()
+    return false unless task.status() is 'queued'
     @_tasks.push(task)
     @_emitter.emit('task-queued', task, this)
 
   tasks: ->
-    @_tasks.slice(0)
+    @_tasks
+
+  nextTask: ->
+    @_tasks[0] || null
 
   on: (args...) ->
     @_emitter.on(args...)

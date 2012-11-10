@@ -1,16 +1,16 @@
 expect = require('chai').expect
+Task = require('models/task')
 
-TaskMatcher = require('task-matcher')
-Collection = require('lib/collection')
+taskMatcher = require('task-matcher')
 Queue = require('models/queue')
 Teammate = require('models/teammate')
 
 describe "TaskMatcher:", ->
-  beforeEach ->
-    @queues = new Collection(Queue)
-    @support = @queues.create(name: "Support")
-    @joe = new Teammate(name: "Joe")
-
-  it "is scoped to a queue collection", ->
-    matcher = new TaskMatcher(@queues)
-    expect(matcher.queues()).to.deep.equal @queues
+  it "it returns the next task of the first queue that has one with #findTaskFor", ->
+    support = new Queue(name: "Support")
+    buyMilk = new Task(title: "buy milk")
+    support.enqueue(buyMilk)
+    joe = {queues: -> [support]}
+    {queue, task} = taskMatcher.findTaskFor(joe)
+    expect(task).to.deep.equal buyMilk
+    expect(queue).to.deep.equal support

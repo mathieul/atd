@@ -1,14 +1,11 @@
 expect = require('chai').expect
-# sinon = require('sinon')
-# EventEmitter2 = require('eventemitter2').EventEmitter2
 Distributor = require('distributor')
 Collection = require('lib/collection')
 Queue = require('models/queue')
+Ability = require('models/ability')
 Teammate = require('models/teammate')
 Task = require('models/task')
-
-# class CollectionMock extends EventEmitter2
-#   constructor: (@name) ->
+Team = require('models/team')
 
 # it "listens to queue events (task-queued, task-dequeued to cancel)"
 # it "listens to agent events (agent-available, agent-not-available to cancel)"
@@ -17,19 +14,33 @@ Task = require('models/task')
 
 describe "Distributor:", ->
   beforeEach ->
-    @queues = new Collection(Queue)
-    @support = @queues.create(name: "Support")
-    @teammates = new Collection(Teammate, events: ['status-changed'])
-    @joe = @teammates.create(uid: "001", name: "Joe")
+    @team = new Team(name: "Company")
+    @queues = @team.queues()
+    @teammates = @team.teammates()
+    @support = @team.queues().create(name: "Support")
+    @joe = @team.teammates().create(uid: "001", name: "Joe")
     @support.assignTeammate(@joe)
+    @joe.signIn()
 
-  describe "queues are empty, no agent are available -", (done) ->
-    it "it offers a queued task to an agent who becomes available'", ->
+  describe "a queue has a task and an agent is signed in -", ->
+    beforeEach ->
+      @task = new Task(title: "my printer is not working")
+      @support.enqueue(@task)
+
+    it "offers a queued task to an agent who becomes available'", (done) ->
       distributor = new Distributor(@queues, @teammates)
-      task = new Task(title: "my printer is not working")
-      @support.enqueue(task)
-      @joe.signIn()
-
       @joe.makeAvailable()
-      expect(task.status()).to.equal 'offered'
-      expect(@joe.status()).to.equal 'task_offered'
+      setTimeout =>
+        expect(@joe.status()).to.equal 'task_offered'
+        expect(@task.status()).to.equal 'offered'
+        done()
+      , 100
+
+    it "emits an 'offer_task' event", (done) ->
+      distributor = new Distributor(@queues, @teammates)
+      distributor.on 'offer_task', (task, queue, teammate) =>
+        expect(task).to.deep.equal @task
+        expect(queue).to.deep.equal @support
+        expect(teammate).to.deep.equal @joe
+        done()
+      @joe.makeAvailable()

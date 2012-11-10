@@ -1,6 +1,8 @@
 expect = require('chai').expect
+Collection = require('lib/collection')
 Queue = require('models/queue')
 Teammate = require('models/teammate')
+Ability = require('models/ability')
 Task = require('models/task')
 
 describe "Queue:", ->
@@ -13,6 +15,8 @@ describe "Queue:", ->
   describe "teammate assignment -", ->
     beforeEach ->
       @queue = new Queue(uid: "mqrd", name: "Masquerade")
+      @team = {abilities: -> @_abilities ?= new Collection(Ability)}
+      @queue.parent = @team
       @mate = new Teammate(uid: "pl01", name: "Player #1")
 
     describe "#assignTeammate -", ->
@@ -45,15 +49,22 @@ describe "Queue:", ->
         @ability = @queue.assignTeammate(@mate)
 
       it "deletes a capability if it exists", ->
+        expect(@team.abilities().length).to.equal 1
         @queue.deassignTeammate(@mate)
-        expect(@queue.abilities().length).to.equal 0
+        expect(@team.abilities().length).to.equal 0
 
   describe "handle queueing -", ->
     beforeEach ->
       @queue = new Queue(uid: "mqrd", name: "Masquerade")
+      @team = {abilities: -> @_abilities ?= new Collection(Ability)}
+      @queue.parent = @team
       @task = new Task(title: "go north")
 
     it "enqueues a task with #enqueue", ->
+      @queue.enqueue(@task)
+      expect(@task.status()).to.equal 'queued'
+
+    it "changes the task status to queued after it is", ->
       @queue.enqueue(@task)
       expect(@queue.tasks()).to.deep.equal [@task]
 
@@ -63,3 +74,10 @@ describe "Queue:", ->
         expect(queue).to.equal @queue
         done()
       @queue.enqueue(@task)
+
+    it "returns the next task with #nextTask", ->
+      expect(@queue.nextTask()).to.equal null
+      @queue.enqueue(one = new Task(name: 'one'))
+      expect(@queue.nextTask()).to.deep.equal one
+      @queue.enqueue(two = new Task(name: 'two'))
+      expect(@queue.nextTask()).to.deep.equal one

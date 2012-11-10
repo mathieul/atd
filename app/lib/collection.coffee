@@ -14,9 +14,11 @@ class Collection
   create: (attributes) ->
     @add(new @_modelClass(attributes))
 
-  get: (uid) ->
-    uid = normalizeUid(uid)
-    @models[uid]
+  get: (uids) ->
+    if _.isArray(uids)
+      (@_get(uid) for uid in uids)
+    else
+      @_get(uids)
 
   add: (model) ->
     @models[model.uid()] = model
@@ -45,10 +47,15 @@ class Collection
     list = @_callbacks[event] ||= []
     list.push([callback, context])
 
+  _get: (uid) ->
+    uid = normalizeUid(uid)
+    @models[uid]
+
   _updateLength: ->
     @length = _.size(@models)
 
   _broadcastEvent: (event, args) ->
     for [callback, context] in (@_callbacks[event] || [])
       callback.apply(context, args)
+
 module.exports = Collection
