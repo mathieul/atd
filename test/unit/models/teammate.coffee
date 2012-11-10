@@ -61,3 +61,12 @@ describe "Teammate:", ->
       @mate.makeAvailable()
       expect(@mate.offerTask(task)).to.be.true
       expect(@mate.status()).to.equal "task_offered"
+
+    it "can accept a task with #acceptTaskOffered", ->
+      task = new Task(name: "Buy eggs")
+      task.queue()
+      @mate.signIn()
+      @mate.makeAvailable()
+      @mate.offerTask(task)
+      @mate.acceptTaskOffered()
+      expect(@mate.status()).to.equal "busy"

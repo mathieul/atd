@@ -26,9 +26,9 @@ describe "Distributor:", ->
     beforeEach ->
       @task = new Task(title: "my printer is not working")
       @support.enqueue(@task)
+      @distributor = new Distributor(@queues, @teammates)
 
     it "offers a queued task to an agent who becomes available'", (done) ->
-      distributor = new Distributor(@queues, @teammates)
       @joe.makeAvailable()
       setTimeout =>
         expect(@joe.status()).to.equal 'task_offered'
@@ -37,10 +37,17 @@ describe "Distributor:", ->
       , 100
 
     it "emits an 'offer_task' event", (done) ->
-      distributor = new Distributor(@queues, @teammates)
-      distributor.on 'offer_task', (task, queue, teammate) =>
+      @distributor.on 'offer_task', (task, queue, teammate) =>
         expect(task).to.deep.equal @task
         expect(queue).to.deep.equal @support
         expect(teammate).to.deep.equal @joe
         done()
       @joe.makeAvailable()
+
+    it "update the task when the agent accepts it", (done) ->
+      @joe.makeAvailable()
+      @joe.acceptTaskOffered()
+      setTimeout =>
+        expect(@task.status()).to.equal 'assigned'
+        done()
+      , 100

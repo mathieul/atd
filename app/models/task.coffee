@@ -8,6 +8,7 @@ class Task
   constructor: (attributes = {}) ->
     attributes.completed ?= false
     model.setupFields(this, @fields, attributes)
+    @_currentQueue = null
     @_emitter = new EventEmitter2
     @_sm = new StateMachine stateMachineConfig,
       changed: (newState, previousState, message) =>
@@ -21,7 +22,13 @@ class Task
   on: (args...) ->
     @_emitter.on(args...)
 
-for message in ['queue', 'offer', 'assign', 'complete', 'cancel']
+  queue: (queue) ->
+    @_sm.trigger('queue')
+    @_currentQueue = queue if @_sm.state() is 'queued'
+
+  currentQueue: -> @_currentQueue
+
+for message in ['offer', 'assign', 'complete', 'cancel']
   Task::[message] = do (message) -> (-> @_sm.trigger message)
 
 stateMachineConfig =

@@ -21,13 +21,16 @@ class Teammate
     uids = _.map(abilities, (ability) -> ability.queueUid())
     @parent.queues(uids) || []
 
+  currentTask: -> @_currentTask
+
   on: (args...) ->
     @_emitter.on(args...)
 
   removeAllListeners: (args...) ->
     @_emitter.removeAllListeners(args...)
 
-  signIn:        -> @_sm.trigger('sign_in')
+  signIn: -> @_sm.trigger('sign_in')
+
   makeAvailable: -> @_sm.trigger('make_available')
 
   offerTask: (task) ->
@@ -38,7 +41,7 @@ class Teammate
     else
       false
 
-  currentTask: -> @_currentTask
+  acceptTaskOffered: -> @_sm.trigger('accept_task')
 
 stateMachineConfig =
   initial: 'signed_out'
@@ -61,5 +64,8 @@ stateMachineConfig =
     offer_task:
       from: 'waiting'
       to: 'task_offered'
+    accept_task:
+      from: 'task_offered'
+      to: 'busy'
 
 module.exports = Teammate

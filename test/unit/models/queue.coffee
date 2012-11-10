@@ -63,6 +63,7 @@ describe "Queue:", ->
     it "enqueues a task with #enqueue", ->
       @queue.enqueue(@task)
       expect(@task.status()).to.equal 'queued'
+      expect(@task.currentQueue()).to.deep.equal @queue
 
     it "changes the task status to queued after it is", ->
       @queue.enqueue(@task)

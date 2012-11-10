@@ -43,7 +43,7 @@ describe "Basic Queueing:", ->
       expect(state.queue).to.deep.equal @queue
       expect(state.teammate).to.deep.equal @mate
 
-      @mate.accept(task)
+      @mate.acceptTaskOffered()
       setTimeout =>
         expect(@mate.status()).to.equal "busy"
         expect(@mate.currentTask()).to.deep.equal task

@@ -1,5 +1,6 @@
 expect = require('chai').expect
 Task = require('models/task')
+Queue = require('models/queue')
 
 describe "Task:", ->
 
@@ -22,8 +23,10 @@ describe "Task:", ->
       expect(@task.status()).to.equal 'created'
 
     it "changes to queued with #queue", ->
-      @task.queue()
+      support = new Queue(name: "Support")
+      @task.queue(support)
       expect(@task.status()).to.equal 'queued'
+      expect(@task.currentQueue()).to.deep.equal support
 
     it "changes to offered if queued, with #offer", ->
       @task.queue()

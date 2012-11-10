@@ -27,7 +27,7 @@ class Queue
     ability
 
   enqueue: (task) ->
-    task.queue()
+    task.queue(this)
     return false unless task.status() is 'queued'
     @_tasks.push(task)
     @_emitter.emit('task-queued', task, this)
